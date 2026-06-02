@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <CalculatorShell eyebrow="Word tool" title="Word Numerology Calculator" keyword="word numerology calculator" intro="Enter a word, brand name, project name, or idea to calculate its symbolic numerology number.">
+    <CalculatorShell eyebrow="Word tool" title="Word Numerology Calculator" keyword="word numerology calculator" path="/word-numerology-calculator" intro="Enter a word, brand name, project name, or idea to calculate its symbolic numerology number.">
       <SimpleDateCalculator type="word" />
     </CalculatorShell>
   );

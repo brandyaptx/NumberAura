@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <CalculatorShell eyebrow="Name tool" title="Free Name Numerology Calculator" keyword="name numerology calculator" intro="Enter a full name to calculate expression, soul urge, and personality numbers using a simple Pythagorean numerology method.">
+    <CalculatorShell eyebrow="Name tool" title="Free Name Numerology Calculator" keyword="name numerology calculator" path="/name-numerology-calculator" intro="Enter a full name to calculate expression, soul urge, and personality numbers using a simple Pythagorean numerology method.">
       <NameCalculator />
     </CalculatorShell>
   );

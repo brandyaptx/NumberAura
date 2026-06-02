@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <CalculatorShell eyebrow="Date tool" title="Life Path Number Calculator" keyword="life path number calculator" intro="Enter a date to calculate a life path number and read a simple numerology meaning.">
+    <CalculatorShell eyebrow="Date tool" title="Life Path Number Calculator" keyword="life path number calculator" path="/life-path-number-calculator" intro="Enter a date to calculate a life path number and read a simple numerology meaning.">
       <SimpleDateCalculator type="life" />
     </CalculatorShell>
   );

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { SiteHeader } from '@/components/SiteHeader';
+import { baseUrl } from '@/lib/number-content';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://numberaura.com'),
+  metadataBase: new URL(baseUrl),
   title: {
     default: 'Free Numerology Calculators - NumberAura',
     template: '%s | NumberAura'

@@ -1,7 +1,14 @@
+import Link from 'next/link';
 import { ToolCard } from '@/components/ToolCard';
 import { Disclaimer } from '@/components/Disclaimer';
+import { lifePathNumbers, personalYearNumbers } from '@/lib/number-content';
 
 const tools = [
+  {
+    title: 'Free Numerology Calculator',
+    href: '/numerology-calculator',
+    description: 'Generate a complete report with life path, birthday, expression, soul urge, personality, and personal year numbers.'
+  },
   {
     title: 'Name Numerology Calculator',
     href: '/name-numerology-calculator',
@@ -21,6 +28,11 @@ const tools = [
     title: 'Personal Year Numerology Calculator',
     href: '/personal-year-numerology-calculator',
     description: 'Use your birth month, birth day, and the current year to explore your personal year number.'
+  },
+  {
+    title: 'Birthday Number Calculator',
+    href: '/birthday-number-calculator',
+    description: 'Calculate the birthday number from a birth day and compare it with your life path number.'
   },
   {
     title: 'Life Path Number Calculator',
@@ -44,8 +56,16 @@ export default function HomePage() {
             Free Numerology Calculators for Names, Dates, Addresses, and Words
           </h1>
           <p className="mt-6 max-w-2xl text-xl leading-9 text-slate-200">
-            NumberAura helps you calculate simple numerology numbers and read clear, friendly meanings. Start with a name, address, wedding date, life path number, or personal year.
+            NumberAura helps you calculate a full numerology report from a name and birth date, then explore clear meanings for life path, birthday, name, and personal year numbers.
           </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/numerology-calculator" className="rounded-2xl bg-gold px-5 py-3 font-black text-night transition hover:bg-white">
+              Start full report
+            </Link>
+            <Link href="/life-path-number-calculator" className="rounded-2xl border border-white/10 px-5 py-3 font-bold text-white transition hover:border-gold">
+              Calculate life path
+            </Link>
+          </div>
           <div className="mt-8 max-w-2xl">
             <Disclaimer />
           </div>
@@ -54,9 +74,38 @@ export default function HomePage() {
 
       <section className="px-4 py-16">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl font-black text-white">Popular calculators</h2>
+          <h2 className="text-3xl font-black text-white">Popular numerology calculators</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {tools.map((tool) => <ToolCard key={tool.href} {...tool} />)}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 pb-16">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
+          <div>
+            <h2 className="text-3xl font-black text-white">Life path number meanings</h2>
+            <p className="mt-4 leading-8 text-slate-300">Read the meaning of each life path number after calculating your birth date.</p>
+            <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4">
+              {lifePathNumbers.map((number) => (
+                <Link key={number} href={`/life-path-number-${number}`} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center transition hover:border-gold hover:bg-white/10">
+                  <span className="block text-2xl font-black text-white">{number}</span>
+                  <span className="mt-1 block text-xs font-bold text-slate-400">Life Path</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h2 className="text-3xl font-black text-white">Personal year meanings</h2>
+            <p className="mt-4 leading-8 text-slate-300">Explore the yearly cycle themes from personal year 1 through 9.</p>
+            <div className="mt-6 grid grid-cols-3 gap-3">
+              {personalYearNumbers.map((number) => (
+                <Link key={number} href={`/personal-year-${number}`} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center transition hover:border-gold hover:bg-white/10">
+                  <span className="block text-2xl font-black text-white">{number}</span>
+                  <span className="mt-1 block text-xs font-bold text-slate-400">Year</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>

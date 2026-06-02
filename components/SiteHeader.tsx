@@ -1,9 +1,10 @@
 import Link from 'next/link';
 
 const tools = [
+  ['Full Report', '/numerology-calculator'],
   ['Name Calculator', '/name-numerology-calculator'],
-  ['Address Calculator', '/address-numerology-calculator'],
-  ['Wedding Date', '/wedding-date-numerology-calculator'],
+  ['Life Path', '/life-path-number-calculator'],
+  ['Birthday', '/birthday-number-calculator'],
   ['Personal Year', '/personal-year-numerology-calculator']
 ];
 

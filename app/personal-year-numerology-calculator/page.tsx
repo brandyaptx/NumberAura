@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <CalculatorShell eyebrow="Year tool" title="Personal Year Numerology Calculator" keyword="personal year numerology calculator" intro="Enter a birthday and a year to calculate a personal year number and read the theme for that period.">
+    <CalculatorShell eyebrow="Year tool" title="Personal Year Numerology Calculator" keyword="personal year numerology calculator" path="/personal-year-numerology-calculator" intro="Enter a birthday and a year to calculate a personal year number and read the theme for that period.">
       <SimpleDateCalculator type="personalYear" />
     </CalculatorShell>
   );

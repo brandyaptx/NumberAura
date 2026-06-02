@@ -11,7 +11,7 @@ import {
 } from '@/lib/numerology';
 import { ResultCard } from '@/components/ResultCard';
 
-type CalculatorType = 'life' | 'wedding' | 'personalYear' | 'address' | 'word';
+type CalculatorType = 'life' | 'birthday' | 'wedding' | 'personalYear' | 'address' | 'word';
 
 type CalculatorResult = {
   label: string;
@@ -25,6 +25,7 @@ type CalculatorResult = {
 
 const examples: Record<CalculatorType, { date: string; year: string; text: string }> = {
   life: { date: '1992-08-17', year: String(new Date().getFullYear()), text: '' },
+  birthday: { date: '1992-08-17', year: String(new Date().getFullYear()), text: '' },
   wedding: { date: '2026-10-24', year: String(new Date().getFullYear()), text: '' },
   personalYear: { date: '1992-08-17', year: String(new Date().getFullYear()), text: '' },
   address: { date: '', year: String(new Date().getFullYear()), text: '1288 Maple Street' },
@@ -137,6 +138,25 @@ export function SimpleDateCalculator({ type }: { type: CalculatorType }) {
       return;
     }
 
+    if (type === 'birthday') {
+      const parsedDate = dateParts(nextDate);
+
+      if (!parsedDate) {
+        setError('Choose a birth date to calculate a birthday number.');
+        setResult(null);
+        return;
+      }
+
+      setError('');
+      setResult(buildDigitResult(
+        'Birthday number',
+        'How this birthday number is calculated',
+        String(parsedDate.day),
+        'Birthday numbers use the day of the month from the birth date, then reduce it to a single digit or master number.'
+      ));
+      return;
+    }
+
     if (type === 'personalYear') {
       const parsedDate = dateParts(nextDate);
       const targetYear = Number(nextYear);
@@ -235,7 +255,7 @@ export function SimpleDateCalculator({ type }: { type: CalculatorType }) {
   return (
     <div className="space-y-6">
       <form onSubmit={handleSubmit} className="grid gap-4 rounded-3xl border border-white/10 bg-white/10 p-6 md:grid-cols-2">
-        {(type === 'life' || type === 'wedding' || type === 'personalYear') && (
+        {(type === 'life' || type === 'birthday' || type === 'wedding' || type === 'personalYear') && (
           <label className="text-sm font-bold text-white">Date
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="mt-3 w-full rounded-2xl border border-white/10 bg-night px-4 py-4 text-white outline-none focus:border-gold" />
           </label>

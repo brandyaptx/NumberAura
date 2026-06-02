@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <CalculatorShell eyebrow="Address tool" title="Address Numerology Calculator" keyword="address numerology calculator" intro="Enter a house, apartment, or street address to find its symbolic numerology number and a quick reading.">
+    <CalculatorShell eyebrow="Address tool" title="Address Numerology Calculator" keyword="address numerology calculator" path="/address-numerology-calculator" intro="Enter a house, apartment, or street address to find its symbolic numerology number and a quick reading.">
       <SimpleDateCalculator type="address" />
     </CalculatorShell>
   );
