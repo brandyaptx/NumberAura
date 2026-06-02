@@ -46,6 +46,19 @@ const tools = [
   }
 ];
 
+const guides = [
+  {
+    title: 'How to Calculate Numerology Numbers',
+    href: '/how-to-calculate-numerology',
+    description: 'Learn the formulas behind life path, expression, soul urge, personality, birthday, and personal year numbers.'
+  },
+  {
+    title: 'How to Calculate Life Path Number',
+    href: '/how-to-calculate-life-path-number',
+    description: 'Follow the date-of-birth formula, master number notes, and links to every life path number meaning.'
+  }
+];
+
 export default function HomePage() {
   return (
     <main>
@@ -65,6 +78,9 @@ export default function HomePage() {
             <Link href="/life-path-number-calculator" className="rounded-2xl border border-white/10 px-5 py-3 font-bold text-white transition hover:border-gold">
               Calculate life path
             </Link>
+            <Link href="/how-to-calculate-numerology" className="rounded-2xl border border-white/10 px-5 py-3 font-bold text-white transition hover:border-gold">
+              Learn the formulas
+            </Link>
           </div>
           <div className="mt-8 max-w-2xl">
             <Disclaimer />
@@ -77,6 +93,21 @@ export default function HomePage() {
           <h2 className="text-3xl font-black text-white">Popular numerology calculators</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {tools.map((tool) => <ToolCard key={tool.href} {...tool} />)}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 pb-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-3xl font-black text-white">Numerology guides</h2>
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            {guides.map((guide) => (
+              <Link key={guide.href} href={guide.href} className="group rounded-3xl border border-white/10 bg-white/10 p-6 transition hover:-translate-y-1 hover:border-gold/70 hover:bg-white/15">
+                <h3 className="text-xl font-black text-white group-hover:text-gold">{guide.title}</h3>
+                <p className="mt-3 leading-7 text-slate-300">{guide.description}</p>
+                <p className="mt-5 text-sm font-bold text-gold">Read guide</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -116,7 +147,7 @@ export default function HomePage() {
           <p>Numerology tools are simple, fast, and easy to understand. Instead of asking users to learn complex astrology terms, a calculator can turn a name, date, or address into one symbolic number and a short reading.</p>
           <p>This makes NumberAura useful for people comparing baby names, checking a new apartment number, choosing a wedding date, naming a brand, or journaling about the year ahead.</p>
           <h2>How the calculators work</h2>
-          <p>The site uses the Pythagorean numerology system for letters and basic digit reduction for dates and addresses. Master numbers 11, 22, and 33 are preserved in many readings because they are commonly treated as special numbers in modern numerology.</p>
+          <p>The site uses digit reduction for dates and addresses, Pythagorean values for most letter-based calculations, and a Chaldean comparison mode in the name numerology calculator. Master numbers 11, 22, and 33 are preserved in many readings because they are commonly treated as special numbers in modern numerology.</p>
         </div>
       </section>
     </main>

@@ -2,14 +2,20 @@
 
 import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { getReading, letterBreakdown, type LetterBreakdown } from '@/lib/numerology';
+import { getReading, letterBreakdown, type LetterBreakdown, type NumerologySystem } from '@/lib/numerology';
 import { ResultCard } from '@/components/ResultCard';
 
 type NameResult = {
   name: string;
+  system: NumerologySystem;
   expression: LetterBreakdown;
   soul: LetterBreakdown;
   personality: LetterBreakdown;
+};
+
+const systemLabels: Record<NumerologySystem, string> = {
+  pythagorean: 'Pythagorean',
+  chaldean: 'Chaldean'
 };
 
 function formatValues(breakdown: LetterBreakdown): string {
@@ -30,17 +36,19 @@ function formatReduction(breakdown: LetterBreakdown): string {
   return steps.join(' -> ');
 }
 
-function buildResult(name: string): NameResult {
+function buildResult(name: string, system: NumerologySystem): NameResult {
   return {
     name,
-    expression: letterBreakdown(name, 'all'),
-    soul: letterBreakdown(name, 'vowels'),
-    personality: letterBreakdown(name, 'consonants')
+    system,
+    expression: letterBreakdown(name, 'all', system),
+    soul: letterBreakdown(name, 'vowels', system),
+    personality: letterBreakdown(name, 'consonants', system)
   };
 }
 
 export function NameCalculator() {
   const [name, setName] = useState('');
+  const [system, setSystem] = useState<NumerologySystem>('pythagorean');
   const [result, setResult] = useState<NameResult | null>(null);
   const [error, setError] = useState('');
 
@@ -56,7 +64,7 @@ export function NameCalculator() {
     }
 
     setError('');
-    setResult(buildResult(trimmedName));
+    setResult(buildResult(trimmedName, system));
   }
 
   function useExample() {
@@ -64,7 +72,14 @@ export function NameCalculator() {
 
     setName(exampleName);
     setError('');
-    setResult(buildResult(exampleName));
+    setResult(buildResult(exampleName, system));
+  }
+
+  function changeSystem(nextSystem: NumerologySystem) {
+    setSystem(nextSystem);
+    if (result) {
+      setResult(buildResult(result.name, nextSystem));
+    }
   }
 
   function clearCalculator() {
@@ -78,6 +93,31 @@ export function NameCalculator() {
       <form onSubmit={handleSubmit} className="rounded-3xl border border-white/10 bg-white/10 p-6">
         <label className="text-sm font-bold text-white" htmlFor="name">Full name</label>
         <input id="name" value={name} onChange={(e) => setName(e.target.value)} className="mt-3 w-full rounded-2xl border border-white/10 bg-night px-4 py-4 text-white outline-none focus:border-gold" placeholder="Enter a full name" />
+        <fieldset className="mt-5">
+          <legend className="text-sm font-bold text-white">Numerology system</legend>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {(['pythagorean', 'chaldean'] as NumerologySystem[]).map((option) => (
+              <label
+                key={option}
+                className={`cursor-pointer rounded-2xl border px-4 py-3 text-sm font-bold transition ${
+                  system === option
+                    ? 'border-gold bg-gold text-night'
+                    : 'border-white/10 text-slate-200 hover:border-gold'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="numerology-system"
+                  value={option}
+                  checked={system === option}
+                  onChange={() => changeSystem(option)}
+                  className="sr-only"
+                />
+                {systemLabels[option]}
+              </label>
+            ))}
+          </div>
+        </fieldset>
         {error && <p className="mt-3 text-sm font-semibold text-rose-300" role="alert">{error}</p>}
         <div className="mt-5 flex flex-wrap gap-3">
           <button type="submit" className="rounded-2xl bg-gold px-5 py-3 font-black text-night transition hover:bg-white">
@@ -93,11 +133,14 @@ export function NameCalculator() {
       </form>
       {!result && (
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-slate-300">
-          Enter a full name, then choose Calculate to generate expression, soul urge, and personality readings.
+          Enter a full name, choose Pythagorean or Chaldean, then calculate expression, soul urge, and personality readings.
         </div>
       )}
       {result && (
         <div className="grid gap-6">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-slate-300">
+            System used: <span className="font-bold text-white">{systemLabels[result.system]}</span>. Switch systems above to compare how the same name changes.
+          </div>
           <ResultCard
             label="Expression number"
             reading={getReading(result.expression.reduction.number)}
@@ -108,7 +151,7 @@ export function NameCalculator() {
                 `Raw total: ${result.expression.total}`,
                 `Reduced result: ${formatReduction(result.expression)}`
               ],
-              note: 'Expression numbers use every letter in the name.'
+              note: `Expression numbers use every letter in the name with the ${systemLabels[result.system]} letter mapping.`
             }}
           />
           <ResultCard
@@ -121,7 +164,7 @@ export function NameCalculator() {
                 `Raw total: ${result.soul.total}`,
                 `Reduced result: ${formatReduction(result.soul)}`
               ],
-              note: 'Soul urge numbers use the vowels A, E, I, O, and U.'
+              note: `Soul urge numbers use the vowels A, E, I, O, and U with the ${systemLabels[result.system]} letter mapping.`
             }}
           />
           <ResultCard
@@ -134,7 +177,7 @@ export function NameCalculator() {
                 `Raw total: ${result.personality.total}`,
                 `Reduced result: ${formatReduction(result.personality)}`
               ],
-              note: 'Personality numbers use consonants only.'
+              note: `Personality numbers use consonants only with the ${systemLabels[result.system]} letter mapping.`
             }}
           />
         </div>

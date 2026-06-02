@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { SimpleDateCalculator } from '@/components/DateCalculator';
 import { CalculatorShell } from '@/components/SeoContent';
 
 export const metadata: Metadata = {
   title: 'Birthday Number Calculator',
-  description: 'Calculate your birthday number from your birth day and read a simple numerology meaning.'
+  description: 'Calculate your birthday number from your birth day, see the reduction steps, and compare it with your life path number.',
+  alternates: {
+    canonical: '/birthday-number-calculator'
+  }
 };
 
 const faq = [
@@ -31,6 +35,14 @@ export default function Page() {
       path="/birthday-number-calculator"
       intro="Enter a birth date to calculate the birthday number from the day of the month and read a quick numerology meaning."
       faq={faq}
+      extraContent={
+        <>
+          <h2>Birthday number vs life path number</h2>
+          <p>The birthday number is calculated from the day of birth only. The life path number uses the full date of birth, so it is usually treated as the larger theme. Use the <Link href="/life-path-number-calculator">life path number calculator</Link> to compare both.</p>
+          <h2>How to calculate it manually</h2>
+          <p>If you were born on the 17th, add 1 + 7 to get 8. If you were born on the 11th or 22nd, many numerology readings keep those as master numbers.</p>
+        </>
+      }
     >
       <SimpleDateCalculator type="birthday" />
     </CalculatorShell>

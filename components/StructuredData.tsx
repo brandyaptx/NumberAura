@@ -38,3 +38,25 @@ export function faqJsonLd(items: Array<{ question: string; answer: string }>) {
     }))
   };
 }
+
+export function howToJsonLd({
+  name,
+  description,
+  steps
+}: {
+  name: string;
+  description: string;
+  steps: string[];
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name,
+    description,
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      text: step
+    }))
+  };
+}

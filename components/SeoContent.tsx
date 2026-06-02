@@ -14,7 +14,7 @@ const defaultFaq: FaqItem[] = [
   },
   {
     question: 'Which numerology system is used?',
-    answer: 'The name tools use a simple Pythagorean letter mapping. Date and address tools use digit reduction, with common master numbers preserved in many readings.'
+    answer: 'Most name and word tools use a simple Pythagorean letter mapping, and the name calculator can compare Chaldean values. Date and address tools use digit reduction, with common master numbers preserved in many readings.'
   },
   {
     question: 'Can I use this for serious decisions?',
@@ -29,7 +29,8 @@ export function CalculatorShell({
   children,
   keyword,
   path,
-  faq = defaultFaq
+  faq = defaultFaq,
+  extraContent
 }: {
   eyebrow: string;
   title: string;
@@ -38,6 +39,7 @@ export function CalculatorShell({
   children: React.ReactNode;
   path?: string;
   faq?: FaqItem[];
+  extraContent?: React.ReactNode;
 }) {
   const pageUrl = path ? `${baseUrl}${path}` : baseUrl;
 
@@ -56,9 +58,10 @@ export function CalculatorShell({
         <div className="mt-10">{children}</div>
         <article className="prose-lite mt-14 rounded-3xl border border-white/10 bg-white/5 p-8">
           <h2>How to use this {keyword}</h2>
-          <p>Enter the requested name, date, address, or word. The calculator reduces the input into a symbolic number and then displays a short reading. You can try several variations and compare how the result changes.</p>
+          <p>Enter the requested name, date, address, or word. The calculator reduces the input into a symbolic number and then displays a short reading with the calculation steps. You can try several variations and compare how the result changes.</p>
           <h2>What the result means</h2>
           <p>Each number is connected with a general theme. For example, 1 often points to independence, 2 to cooperation, 3 to expression, 4 to structure, 5 to freedom, 6 to care, 7 to reflection, 8 to ambition, and 9 to completion.</p>
+          {extraContent}
           <h2>FAQ</h2>
           {faq.map((item) => (
             <div key={item.question}>

@@ -5,7 +5,8 @@ const tools = [
   ['Name Calculator', '/name-numerology-calculator'],
   ['Life Path', '/life-path-number-calculator'],
   ['Birthday', '/birthday-number-calculator'],
-  ['Personal Year', '/personal-year-numerology-calculator']
+  ['Personal Year', '/personal-year-numerology-calculator'],
+  ['Guides', '/how-to-calculate-numerology']
 ];
 
 export function SiteHeader() {

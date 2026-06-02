@@ -28,6 +28,8 @@ export type LetterBreakdown = {
   reduction: Reduction;
 };
 
+export type NumerologySystem = 'pythagorean' | 'chaldean';
+
 const readings: Record<number, Reading> = {
   1: {
     number: 1,
@@ -162,9 +164,39 @@ export function digitSum(value: string, keepMasters = true): number {
   return digitBreakdown(value, keepMasters).reduction.number;
 }
 
-export function letterValue(char: string): number {
+const chaldeanValues: Record<string, number> = {
+  A: 1,
+  I: 1,
+  J: 1,
+  Q: 1,
+  Y: 1,
+  B: 2,
+  K: 2,
+  R: 2,
+  C: 3,
+  G: 3,
+  L: 3,
+  S: 3,
+  D: 4,
+  M: 4,
+  T: 4,
+  E: 5,
+  H: 5,
+  N: 5,
+  X: 5,
+  U: 6,
+  V: 6,
+  W: 6,
+  O: 7,
+  Z: 7,
+  F: 8,
+  P: 8
+};
+
+export function letterValue(char: string, system: NumerologySystem = 'pythagorean'): number {
   const code = char.toUpperCase().charCodeAt(0);
   if (code < 65 || code > 90) return 0;
+  if (system === 'chaldean') return chaldeanValues[char.toUpperCase()] || 0;
   return ((code - 65) % 9) + 1;
 }
 
@@ -177,10 +209,14 @@ function isIncludedLetter(letter: string, mode: 'all' | 'vowels' | 'consonants')
   return true;
 }
 
-export function letterBreakdown(name: string, mode: 'all' | 'vowels' | 'consonants' = 'all'): LetterBreakdown {
+export function letterBreakdown(
+  name: string,
+  mode: 'all' | 'vowels' | 'consonants' = 'all',
+  system: NumerologySystem = 'pythagorean'
+): LetterBreakdown {
   const letters = name.toUpperCase().replace(/[^A-Z]/g, '').split('').map((letter) => ({
     letter,
-    value: letterValue(letter),
+    value: letterValue(letter, system),
     included: isIncludedLetter(letter, mode)
   }));
 
@@ -193,8 +229,12 @@ export function letterBreakdown(name: string, mode: 'all' | 'vowels' | 'consonan
   };
 }
 
-export function nameNumber(name: string, mode: 'all' | 'vowels' | 'consonants' = 'all'): number {
-  return letterBreakdown(name, mode).reduction.number;
+export function nameNumber(
+  name: string,
+  mode: 'all' | 'vowels' | 'consonants' = 'all',
+  system: NumerologySystem = 'pythagorean'
+): number {
+  return letterBreakdown(name, mode, system).reduction.number;
 }
 
 export function lifePathNumber(date: string): number {

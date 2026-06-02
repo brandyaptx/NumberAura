@@ -7,6 +7,8 @@ const staticPaths = [
   '/name-numerology-calculator',
   '/birthday-number-calculator',
   '/life-path-number-calculator',
+  '/how-to-calculate-numerology',
+  '/how-to-calculate-life-path-number',
   '/personal-year-numerology-calculator',
   '/address-numerology-calculator',
   '/wedding-date-numerology-calculator',
