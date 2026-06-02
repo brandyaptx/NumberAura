@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #0d1020;
+  color: #f8fafc;
+}
+
+input, button, select, textarea {
+  font: inherit;
+}
+
+.prose-lite p {
+  margin-bottom: 1rem;
+  color: #d8def0;
+  line-height: 1.8;
+}
+
+.prose-lite h2 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: white;
+}
+
+.prose-lite h3 {
+  margin-top: 1.4rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+}
