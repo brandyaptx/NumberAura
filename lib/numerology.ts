@@ -7,6 +7,27 @@ export type Reading = {
   advice: string;
 };
 
+export type Reduction = {
+  number: number;
+  steps: number[];
+};
+
+export type DigitBreakdown = {
+  digits: number[];
+  total: number;
+  reduction: Reduction;
+};
+
+export type LetterBreakdown = {
+  letters: Array<{
+    letter: string;
+    value: number;
+    included: boolean;
+  }>;
+  total: number;
+  reduction: Reduction;
+};
+
 const readings: Record<number, Reading> = {
   1: {
     number: 1,
@@ -106,18 +127,39 @@ const readings: Record<number, Reading> = {
   }
 };
 
-export function reduceNumber(input: number, keepMasters = true): number {
-  let n = Math.abs(input);
+export function reduceNumberSteps(input: number, keepMasters = true): Reduction {
+  let n = Math.abs(Math.trunc(input));
+  const steps = [n];
+
   while (n > 9) {
-    if (keepMasters && (n === 11 || n === 22 || n === 33)) return n;
+    if (keepMasters && (n === 11 || n === 22 || n === 33)) {
+      return { number: n, steps };
+    }
+
     n = String(n).split('').reduce((sum, digit) => sum + Number(digit), 0);
+    steps.push(n);
   }
-  return n;
+
+  return { number: n, steps };
+}
+
+export function reduceNumber(input: number, keepMasters = true): number {
+  return reduceNumberSteps(input, keepMasters).number;
+}
+
+export function digitBreakdown(value: string, keepMasters = true): DigitBreakdown {
+  const digits = value.replace(/\D/g, '').split('').filter(Boolean).map(Number);
+  const total = digits.reduce((sum, digit) => sum + digit, 0);
+
+  return {
+    digits,
+    total,
+    reduction: reduceNumberSteps(total, keepMasters)
+  };
 }
 
 export function digitSum(value: string, keepMasters = true): number {
-  const total = value.replace(/\D/g, '').split('').reduce((sum, digit) => sum + Number(digit), 0);
-  return reduceNumber(total, keepMasters);
+  return digitBreakdown(value, keepMasters).reduction.number;
 }
 
 export function letterValue(char: string): number {
@@ -126,16 +168,33 @@ export function letterValue(char: string): number {
   return ((code - 65) % 9) + 1;
 }
 
-export function nameNumber(name: string, mode: 'all' | 'vowels' | 'consonants' = 'all'): number {
+function isIncludedLetter(letter: string, mode: 'all' | 'vowels' | 'consonants'): boolean {
   const vowels = new Set(['A', 'E', 'I', 'O', 'U']);
-  const letters = name.toUpperCase().replace(/[^A-Z]/g, '').split('');
-  const total = letters.reduce((sum, letter) => {
-    const isVowel = vowels.has(letter);
-    if (mode === 'vowels' && !isVowel) return sum;
-    if (mode === 'consonants' && isVowel) return sum;
-    return sum + letterValue(letter);
-  }, 0);
-  return reduceNumber(total);
+  const isVowel = vowels.has(letter);
+
+  if (mode === 'vowels') return isVowel;
+  if (mode === 'consonants') return !isVowel;
+  return true;
+}
+
+export function letterBreakdown(name: string, mode: 'all' | 'vowels' | 'consonants' = 'all'): LetterBreakdown {
+  const letters = name.toUpperCase().replace(/[^A-Z]/g, '').split('').map((letter) => ({
+    letter,
+    value: letterValue(letter),
+    included: isIncludedLetter(letter, mode)
+  }));
+
+  const total = letters.reduce((sum, item) => item.included ? sum + item.value : sum, 0);
+
+  return {
+    letters,
+    total,
+    reduction: reduceNumberSteps(total)
+  };
+}
+
+export function nameNumber(name: string, mode: 'all' | 'vowels' | 'consonants' = 'all'): number {
+  return letterBreakdown(name, mode).reduction.number;
 }
 
 export function lifePathNumber(date: string): number {

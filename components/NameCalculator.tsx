@@ -1,26 +1,142 @@
 'use client';
 
+import type { FormEvent } from 'react';
 import { useState } from 'react';
-import { getReading, nameNumber } from '@/lib/numerology';
+import { getReading, letterBreakdown, type LetterBreakdown } from '@/lib/numerology';
 import { ResultCard } from '@/components/ResultCard';
 
+type NameResult = {
+  name: string;
+  expression: LetterBreakdown;
+  soul: LetterBreakdown;
+  personality: LetterBreakdown;
+};
+
+function formatValues(breakdown: LetterBreakdown): string {
+  const values = breakdown.letters
+    .filter((item) => item.included)
+    .map((item) => `${item.letter}=${item.value}`);
+
+  return values.length ? values.join(' + ') : 'No matching letters';
+}
+
+function formatReduction(breakdown: LetterBreakdown): string {
+  const steps = breakdown.reduction.steps;
+
+  if (steps.length <= 1) {
+    return `${breakdown.total}`;
+  }
+
+  return steps.join(' -> ');
+}
+
+function buildResult(name: string): NameResult {
+  return {
+    name,
+    expression: letterBreakdown(name, 'all'),
+    soul: letterBreakdown(name, 'vowels'),
+    personality: letterBreakdown(name, 'consonants')
+  };
+}
+
 export function NameCalculator() {
-  const [name, setName] = useState('Taylor Morgan');
-  const expression = getReading(nameNumber(name, 'all'));
-  const soul = getReading(nameNumber(name, 'vowels'));
-  const personality = getReading(nameNumber(name, 'consonants'));
+  const [name, setName] = useState('');
+  const [result, setResult] = useState<NameResult | null>(null);
+  const [error, setError] = useState('');
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const trimmedName = name.trim();
+
+    if (!/[A-Za-z]/.test(trimmedName)) {
+      setError('Enter at least one letter to calculate a name number.');
+      setResult(null);
+      return;
+    }
+
+    setError('');
+    setResult(buildResult(trimmedName));
+  }
+
+  function useExample() {
+    const exampleName = 'Taylor Morgan';
+
+    setName(exampleName);
+    setError('');
+    setResult(buildResult(exampleName));
+  }
+
+  function clearCalculator() {
+    setName('');
+    setError('');
+    setResult(null);
+  }
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-white/10 bg-white/10 p-6">
+      <form onSubmit={handleSubmit} className="rounded-3xl border border-white/10 bg-white/10 p-6">
         <label className="text-sm font-bold text-white" htmlFor="name">Full name</label>
         <input id="name" value={name} onChange={(e) => setName(e.target.value)} className="mt-3 w-full rounded-2xl border border-white/10 bg-night px-4 py-4 text-white outline-none focus:border-gold" placeholder="Enter a full name" />
-      </div>
-      {name.trim() && (
+        {error && <p className="mt-3 text-sm font-semibold text-rose-300" role="alert">{error}</p>}
+        <div className="mt-5 flex flex-wrap gap-3">
+          <button type="submit" className="rounded-2xl bg-gold px-5 py-3 font-black text-night transition hover:bg-white">
+            Calculate
+          </button>
+          <button type="button" onClick={useExample} className="rounded-2xl border border-white/10 px-5 py-3 font-bold text-white transition hover:border-gold">
+            Use example
+          </button>
+          <button type="button" onClick={clearCalculator} className="rounded-2xl border border-white/10 px-5 py-3 font-bold text-slate-300 transition hover:border-white/30">
+            Clear
+          </button>
+        </div>
+      </form>
+      {!result && (
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-slate-300">
+          Enter a full name, then choose Calculate to generate expression, soul urge, and personality readings.
+        </div>
+      )}
+      {result && (
         <div className="grid gap-6">
-          <ResultCard label="Expression number" reading={expression} />
-          <ResultCard label="Soul urge number" reading={soul} />
-          <ResultCard label="Personality number" reading={personality} />
+          <ResultCard
+            label="Expression number"
+            reading={getReading(result.expression.reduction.number)}
+            details={{
+              title: `How "${result.name}" becomes an expression number`,
+              lines: [
+                `Letters used: ${formatValues(result.expression)}`,
+                `Raw total: ${result.expression.total}`,
+                `Reduced result: ${formatReduction(result.expression)}`
+              ],
+              note: 'Expression numbers use every letter in the name.'
+            }}
+          />
+          <ResultCard
+            label="Soul urge number"
+            reading={getReading(result.soul.reduction.number)}
+            details={{
+              title: 'How the soul urge number is calculated',
+              lines: [
+                `Vowels used: ${formatValues(result.soul)}`,
+                `Raw total: ${result.soul.total}`,
+                `Reduced result: ${formatReduction(result.soul)}`
+              ],
+              note: 'Soul urge numbers use the vowels A, E, I, O, and U.'
+            }}
+          />
+          <ResultCard
+            label="Personality number"
+            reading={getReading(result.personality.reduction.number)}
+            details={{
+              title: 'How the personality number is calculated',
+              lines: [
+                `Consonants used: ${formatValues(result.personality)}`,
+                `Raw total: ${result.personality.total}`,
+                `Reduced result: ${formatReduction(result.personality)}`
+              ],
+              note: 'Personality numbers use consonants only.'
+            }}
+          />
         </div>
       )}
     </div>
